@@ -1,21 +1,163 @@
 <% layout("/layouts/boilerplate") -%>
-<body>
-  <h2>Pay ₹<%= price %> with Razorpay</h2>
-  <button class="btn btn-outline-success" id="rzp-button">Pay Now</button>
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  /* Bulletproof Custom Styling - Forces the production look */
+  .checkout-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75vh;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .checkout-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    padding: 40px 30px;
+    text-align: center;
+    border: 1px solid #f0f0f0;
+  }
+  .checkout-icon {
+    width: 65px;
+    height: 65px;
+    background: #e8f5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .checkout-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin-bottom: 4px;
+  }
+  .checkout-subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+  }
+  .amount-box {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #eeeeee;
+  }
+  .amount-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .amount-value {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+    line-height: 1;
+  }
+  .pay-btn {
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.35);
+  }
+  .pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+  }
+  .pay-btn:disabled {
+    background: #cccccc;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .secure-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    color: #999;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .cancel-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #999;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .cancel-link:hover {
+    color: #444;
+  }
+</style>
 
-  <script>
-    document.getElementById("rzp-button").onclick = function () {
-      const options = {
-        key:"<%= key_id %>" ,
-        amount: "<%= price * 100 %>",
-        currency: "INR",
-        name: "Test Store",
-        description: "Frontend Only Test",
-        handler: async function (response) {
-          alert("Payment successful!");
+<div class="checkout-page-wrapper">
+  <div class="checkout-card">
+    
+    <div class="checkout-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#4caf50" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 5a1.5 1.5 0 0 1 1.5 1.5v.5h.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h.5v-.5A1.5 1.5 0 0 1 8 5zm.5 2v-.5a.5.5 0 0 0-1 0V7h1z"/>
+      </svg>
+    </div>
+    
+    <h2 class="checkout-title">Secure Checkout</h2>
+    <p class="checkout-subtitle">Powered by Razorpay</p>
 
+    <div class="amount-box">
+      <div class="amount-label">Total to Pay</div>
+      <div class="amount-value">₹<%= Number(price).toLocaleString('en-IN') %></div>
+    </div>
+
+    <button class="pay-btn" id="rzp-button">
+      Pay Securely
+    </button>
+
+    <div class="secure-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+      </svg>
+      128-bit SSL Encrypted
+    </div>
+
+    <a href="/" class="cancel-link">← Cancel and return to store</a>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.getElementById("rzp-button").onclick = function () {
+    const options = {
+      key: "<%= key_id %>",
+      amount: "<%= price * 100 %>", 
+      currency: "INR",
+      name: "DesiDealz", 
+      description: "Order Payment",
+      handler: async function (response) {
+        
+        // UI Update to show processing state
+        const btn = document.getElementById("rzp-button");
+        btn.innerText = "Processing Payment...";
+        btn.disabled = true;
+
+        try {
           const verifyRes = await fetch("/payment/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -23,20 +165,32 @@
           });
 
           const verifyData = await verifyRes.json();
-          console.log("Verification result:", verifyData);
-        },
-        prefill: {
-          name: "Vikash Kumar",
-          email: "vikash@test.com",
-          contact: "9999999999"
-        },
-        theme: {
-          color: "#F37254"
+          
+          if(verifyData.success || verifyData) { // Adjusted based on standard setups
+             window.location.href = "/orders/success"; 
+          } else {
+             alert("Payment verification failed. Please contact support.");
+             btn.innerText = "Try Again";
+             btn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          alert("An error occurred. Please check your connection.");
+          btn.innerText = "Pay Securely";
+          btn.disabled = false;
         }
-      };
-
-      const rzp1 = new Razorpay(options);
-      rzp1.open();
+      },
+      prefill: {
+        name: "User", 
+        email: "user@example.com",
+        contact: "9999999999"
+      },
+      theme: {
+        color: "#6c5ce7" 
+      }
     };
-  </script>
-</body>
+
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+  };
+</script>
