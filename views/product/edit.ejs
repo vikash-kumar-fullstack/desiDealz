@@ -1,62 +1,90 @@
 <% layout("/layouts/boilerplate") -%>
-<body>
-    <form action="/product/<%=data.id%>/edit?_method=PUT" class="needs-validation" method="post" novalidate>
-        <div class="offset-2 mb-3 mt-3 col-8"> <h1>Edit your product</h1>
-            <div class="mb-2">
+
+<div class="container d-flex justify-content-center">
+    <div class="form-wrapper w-100" style="max-width: 650px;">
+        <h1 class="text-center mb-4">Edit your product</h1>
+        
+        <form action="/product/<%=data._id%>?_method=PUT" class="needs-validation" method="post" enctype="multipart/form-data" novalidate>
+            
+            <div class="mb-3 form-group">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" name="title" id="title" class="form-control" value="<%=data.title%>" required>
+                <input type="text" name="title" id="title" class="form-control input" value="<%=data.title%>" required>
                 <div class="invalid-feedback">
                     Please provide a valid title.
-                  </div>
+                </div>
             </div>
-            <div class="mb-2">
+
+            <div class="mb-3 form-group">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="description" id="description" class="form-control" required><%=data.description%></textarea>
+                <textarea name="description" id="description" class="form-control input" rows="4" required><%=data.description%></textarea>
                 <div class="invalid-feedback">
                     Please provide a valid description.
-                  </div>
+                </div>
             </div>
-                <div class="col-md-6 mb-2">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" id="price" name="price" class="form-control" value="<%=data.price%>" required>
+
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="price" class="form-label">Price (₹)</label>
+                    <input type="number" id="price" name="price" class="form-control input" value="<%=data.price%>" required>
                     <div class="invalid-feedback">
                         Please provide a valid price.
-                      </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Previous Image</label><br>
-                    <div class="p-2 border rounded" style="max-width: 200px; height: auto;">
-                        <img src="<%=imageUrl%>" alt="Previous Image" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
                     </div>
                 </div>
-            <div class="mb-2">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" id="image" class="form-control" name="image">
-                
+
+                <div class="col-md-6 form-group">
+                    <label for="categorySelect" class="form-label">Category</label>
+                    <select class="form-select input" id="categorySelect" name="category" required>
+                        <option value="fashion" <%= data.category === 'fashion' ? 'selected' : '' %>>Fashion</option>
+                        <option value="footwear" <%= data.category === 'footwear' ? 'selected' : '' %>>Footwear</option>
+                        <option value="electronics" <%= data.category === 'electronics' ? 'selected' : '' %>>Electronics</option>
+                        <option value="kitchen" <%= data.category === 'kitchen' ? 'selected' : '' %>>Kitchen Appliances</option>
+                        <option value="beauty" <%= data.category === 'beauty' ? 'selected' : '' %>>Beauty</option>
+                        <option value="mobile" <%= data.category === 'mobile' ? 'selected' : '' %>>Mobile</option>
+                        <option value="grocery" <%= data.category === 'grocery' ? 'selected' : '' %>>Grocery</option>
+                    </select>
+                </div>
             </div>
-            
-            <div class="mb-2">
+
+            <div class="mb-3 form-group">
+                <label class="form-label">Product Image</label>
+                <div class="image-preview-box mb-2">
+                    <img id="previewImg" src="<%=imageUrl%>" alt="Current Product Image">
+                </div>
+                <input type="file" id="imageInput" class="form-control input" name="image" accept="image/*">
+                <small class="text-muted">Choose a new file to replace the current image.</small>
+            </div>
+
+            <div class="mb-4 form-group">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" name="location" class="form-control" id="location" value="<%=data.location%>" required>
+                <input type="text" name="location" class="form-control input" id="location" value="<%=data.location%>" required>
                 <div class="invalid-feedback">
                     Please provide a valid location.
-                  </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="categorySelect" class="form-label">Select Category</label>
-                <select class="form-select" id="categorySelect" name="category" value="<%= data.category %>" required>
-                  <option value="<%= data.category %>" disabled selected><%= data.category %></option>
-                  <option value="fashion">Fashion</option>
-                  <option value="footwear">Footwear</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="kitchen">Kitchen Appliances</option>
-                  <option value="beauty">Beauty</option>
-                  <option value="mobile">Mobile</option>
-                  <option value="grocery">Grocery</option>
-                </select>
-            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2" style="font-size: 1.1rem; border-radius: 8px;">Update Product</button>
+            <a href="/product/<%=data._id%>" class="btn btn-outline-secondary w-100 mt-2" style="border-radius: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const imageInput = document.getElementById('imageInput');
+        const previewImg = document.getElementById('previewImg');
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
             
-            <button class="btn btn-outline-danger mt-3">Edit</button>
-        </div>
-    </form>
-</body>
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>

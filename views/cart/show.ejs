@@ -1,71 +1,80 @@
 <% layout('/layouts/boilerplate') -%>
 
-<section class="cart-page">
+<section class="container cart-page mb-5">
+  <h1 class="mb-4 fw-bold">Your Cart</h1>
 
-  <h1>Your Cart</h1>
-
-  <% if (!cart || cart.items.length === 0) { %>
-    <p class="empty-cart">Your cart is empty 🛒</p>
+<% if (!cart || cart.items.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-cart-icon">
+        <img src="/path-to-your-cart-icon.png" alt="Empty Cart" style="width: 80px; height: auto;">
+      </div>
+      <h3 class="text-muted fw-bold mt-2 mb-1">Your cart is feeling a bit light!</h3>
+      <p class="text-muted mb-2">Add some amazing deals to it.</p>
+      <a href="/" class="btn btn-primary px-4 py-2 mt-3" style="border-radius: 8px; display: inline-block;">Explore Products</a>
+    </div>
   <% } else { %>
-
     <div class="cart-layout">
-
-      <!-- 🔥 LEFT: ITEMS -->
+      
       <div class="cart-items">
-
         <% let total = 0; %>
-
         <% for (let item of cart.items) { %>
           <% total += item.product.price * item.quantity; %>
 
           <div class="cart-card">
+            <img src="<%= item.product.image.url || item.product.image %>" alt="product" class="cart-item-img">
 
-            <img src="<%= item.product.image %>" alt="product">
+            <div class="cart-info flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start card-responsive-flex">
+                <div>
+                  <h4 class="mb-1 fw-bold"><%= item.product.title %></h4>
+                  <p class="text-muted mb-2">Price: ₹<%= item.product.price.toLocaleString("en-IN") %></p>
+                </div>
+                <div class="text-end price-qty-block">
+                  <p class="item-total mb-1 fs-5 fw-bold text-primary">
+                    ₹<%= (item.product.price * item.quantity).toLocaleString("en-IN") %>
+                  </p>
+                  <span class="badge bg-light text-dark border">Qty: <%= item.quantity %></span>
+                </div>
+              </div>
 
-            <div class="cart-info">
-              <h3><%= item.product.title %></h3>
-              <p>₹ <%= item.product.price %> × <%= item.quantity %></p>
-              <p class="item-total">
-                ₹ <%= item.product.price * item.quantity %>
-              </p>
-
-              <form action="/cart/remove/<%= item.product._id %>" method="POST">
-                <button class="btn">Remove</button>
-              </form>
+              <div class="mt-3 text-end remove-btn-block">
+                <form action="/cart/remove/<%= item.product._id %>?_method=DELETE" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 6px;">
+                    Remove
+                  </button>
+                </form>
+              </div>
             </div>
-
           </div>
         <% } %>
-
       </div>
 
-      <!-- 🔥 RIGHT: SUMMARY -->
-      <div class="cart-summary">
+      <div class="cart-summary-wrapper">
+        <div class="cart-summary">
+          <h3 class="border-bottom pb-3 mb-4 fw-bold">Order Summary</h3>
 
-        <h2>Order Summary</h2>
+          <div class="summary-row text-muted mb-3">
+            <span>Total Items</span>
+            <span class="fw-bold text-dark"><%= cart.items.length %></span>
+          </div>
 
-        <div class="summary-row">
-          <span>Total Items</span>
-          <span><%= cart.items.length %></span>
+          <div class="summary-row fs-4 fw-bold mb-4">
+            <span>Total</span>
+            <span class="text-primary">₹<%= total.toLocaleString("en-IN") %></span>
+          </div>
+
+          <form action="/cart/checkout" method="post">
+            <button class="btn btn-primary w-100 py-3 fs-5" style="border-radius: 8px; font-weight: 500;">
+              Proceed to Checkout
+            </button>
+          </form>
+          
+          <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.85rem;">
+            🔒 Secure & Encrypted Checkout
+          </p>
         </div>
-
-        <div class="summary-row">
-          <span>Total Price</span>
-          <span>₹ <%= total.toLocaleString("en-IN") %></span>
-        </div>
-
-        <hr>
-
-        <form action="/cart/checkout" method="post">
-          <button class="btn btn-primary checkout-btn">
-            Proceed to Checkout
-          </button>
-        </form>
-
       </div>
 
     </div>
-
   <% } %>
-
 </section>

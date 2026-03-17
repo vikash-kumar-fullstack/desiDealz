@@ -25,6 +25,17 @@ body {
   color: var(--text);
   line-height: 1.6;
 }
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Forces body to be at least the height of the screen */
+  margin: 0;
+}
+
+/* This targets the main content wrapper to stretch and push the footer down */
+main {
+  flex: 1; 
+}
 
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h3 {

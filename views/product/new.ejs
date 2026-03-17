@@ -1,54 +1,100 @@
 <% layout("/layouts/boilerplate") -%>
-<body>
-    <form action="/product/new" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
-        <div class="offset-2 mb-3 mt-3 col-8"> <h1>Creating a new product</h1>
-            <div class="mb-2">
+
+<div class="container d-flex justify-content-center">
+    <div class="form-wrapper w-100" style="max-width: 650px;">
+        <h1 class="text-center mb-4 fw-bold">Sell a New Product</h1>
+        
+        <form action="/product/new" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            
+            <div class="mb-3 form-group">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" name="title" id="title" class="form-control" placeholder="title" required>
+                <input type="text" name="title" id="title" class="form-control input" placeholder="e.g. Apple iPhone 12 - White (64GB)" required>
                 <div class="invalid-feedback">
                     Please provide a valid title.
-                  </div>
+                </div>
             </div>
-            <div class="mb-2">
+
+            <div class="mb-3 form-group">
                 <label for="description" class="form-label">Description</label>
-                <textarea name="description" id="description" class="form-control" placeholder="description" required></textarea>
+                <textarea name="description" id="description" class="form-control input" rows="4" placeholder="Describe your item, its condition, and why someone should buy it..." required></textarea>
                 <div class="invalid-feedback">
                     Please provide a valid description.
-                  </div>
+                </div>
             </div>
-                <div class="col-md-6 mb-2">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" id="price" name="price" class="form-control" placeholder="price" required>
+
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="price" class="form-label">Price (₹)</label>
+                    <input type="number" id="price" name="price" class="form-control input" placeholder="e.g. 1500" required>
                     <div class="invalid-feedback">
                         Please provide a valid price.
-                      </div>
+                    </div>
                 </div>
-            <div class="mb-2">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" id="image" class="form-control" name="image" placeholder="image" required>
+
+                <div class="col-md-6 form-group">
+                    <label for="categorySelect" class="form-label">Category</label>
+                    <select class="form-select input" id="categorySelect" name="category" required>
+                        <option value="" disabled selected>Choose a category</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="footwear">Footwear</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="kitchen">Kitchen Appliances</option>
+                        <option value="beauty">Beauty</option>
+                        <option value="grocery">Grocery</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a category.
+                    </div>
+                </div>
             </div>
-            
-            <div class="mb-2">
+
+            <div class="mb-3 form-group">
+                <label class="form-label">Upload Image</label>
+                <div class="image-preview-box mb-2" id="previewContainer" style="display: none;">
+                    <img id="previewImg" src="" alt="New Product Preview">
+                </div>
+                <input type="file" id="imageInput" class="form-control input" name="image" accept="image/*" required>
+                <div class="invalid-feedback">
+                    Please upload an image.
+                </div>
+            </div>
+
+            <div class="mb-4 form-group">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" name="location" class="form-control" id="location" placeholder="location" required>
+                <input type="text" name="location" class="form-control input" id="location" placeholder="e.g. Mumbai, Maharashtra" required>
                 <div class="invalid-feedback">
                     Please provide a valid location.
-                  </div>
+                </div>
             </div>
-            <div class="mb-3">
-                    <label for="categorySelect" class="form-label">Select Category</label>
-                    <select class="form-select" id="categorySelect" name="category" required>
-                      <option value="" disabled selected>Choose a category</option>
-                      <option value="fashion">Fashion</option>
-                      <option value="footwear">Footwear</option>
-                      <option value="mobile">Mobile</option>
-                      <option value="grocery">Grocery</option>
-                      <option value="electronics">Electronics</option>
-                      <option value="kitchen">Kitchen Appliances</option>
-                      <option value="beauty">Beauty</option>
-                    </select>
-            </div>
-            <button class="btn btn-outline-danger mt-3">Add</button>
-        </div>
-    </form>
-</body>
+
+            <button type="submit" class="btn btn-primary w-100 py-2" style="font-size: 1.1rem; border-radius: 8px;">Save</button>
+            <a href="/" class="btn btn-outline-secondary w-100 mt-2" style="border-radius: 8px;">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImg = document.getElementById('previewImg');
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'flex'; // Show the box once an image is chosen
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none'; // Hide if user cancels selection
+            }
+        });
+    });
+</script>
