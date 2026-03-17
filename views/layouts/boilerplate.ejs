@@ -2,20 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO (basic) -->
+    <meta name="description" content="DesiDealz - Best deals across India">
+
     <title>DesiDealz</title>
+
+    <!-- 🔤 Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- 🔥 NEW CSS SYSTEM -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <link rel="stylesheet" href="/stylesheets/layout.css">
+    <link rel="stylesheet" href="/stylesheets/components.css">
+
+    <!-- OLD CSS (temporary, will remove later safely) -->
+    <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+    <link rel="stylesheet" href="/stylesheets/rating.css">
+
 </head>
-<link rel="stylesheet" href="stylesheets/style.css">
-<link rel="stylesheet" href="/stylesheets/rating.css">
-<body>
-    <%-include("../includes/header.ejs") %>
-    <div class="container">
-        <%-include("../includes/flash.ejs") %>
-        <%-body%>
-        
-    </div>
-    <%-include("../includes/footer.ejs") %> 
+
+<body class="app-layout">
+
+    <%- include("../includes/header.ejs") %>
+
+    <main class="main-container">
+        <%- include("../includes/flash.ejs") %>
+        <%- body %>
+    </main>
+
+    <%- include("../includes/footer.ejs") %>
 
     <script src="/javascripts/script.js"></script>
+
 </body>
 </html>

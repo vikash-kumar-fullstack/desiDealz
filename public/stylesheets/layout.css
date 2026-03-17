@@ -1,0 +1,32 @@
+/* ===== CONTAINER ===== */
+/* ===== MAIN CONTAINER ===== */
+.main-content {
+  flex: 1;
+
+  max-width: 1200px;   /* 🔥 KEY FIX */
+  margin: 0 auto;      /* center */
+  padding: 1rem;       /* spacing */
+}
+
+/* ===== GRID SYSTEM ===== */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Responsive grid */
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 992px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

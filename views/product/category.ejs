@@ -1,58 +1,77 @@
 <% layout("/layouts/boilerplate") -%>
-<body>
-    <div class="container flex-grow-1">
-      <div class="container-fluid position-relative px-3 mt-3 mb-3">
-        <button id="scrollLeft" class="scroll-btn">
-          <i class="ri-arrow-left-wide-line fs-4"></i>
-        </button>
-  
-        <div class="d-flex flex-row flex-nowrap overflow-x-auto justify-content-lg-between gap-4 category-bar px-2" id="categoryScroll">
-          <% const categories = [
-            { name: "Grocery", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxsMhoicy2PEk_G0BFAEQFFyqqf8qgh-hy1w&s" },
-            { name: "Mobile", img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-15-model-unselect-gallery-2-202309_GEO_EMEA?wid=5120&hei=2880&fmt=webp&qlt=70&.v=aVFiZEF4WDEvUWJNSU5HRDg4cklnTGdzSmpObkZCM3MrNmJ5SkhESlNDZ2lGQTRGNnVYNjZ6NWNNT2RQbEdmK3ovdld4NkVCZ3JUZXJyZ1dUb1MwM0dKTG1lVWJJT2RXQWE0Mm9rU1V0V0JCV3NjNWl1UW9rVFRPUVBJRWJDd2NQb3R0UW1Yc3h6Um5aMXhHRitCYTBB&traceId=1" },
-            { name: "Fashion", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxIl45bxA93y_qY44T27vlMqAqAtr-eB3iVw&s" },
-            { name: "Electronics", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_SrXfWV7FUYaZ04WNO07dCRLdYQNII9g16w&s" },
-            { name: "Kitchen", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQopz4Td6D059R0J14Jgi4TpeOMs7hdAiLSTQ&s" },
-            { name: "Beauty", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-dd18WuuJYE-sJhWJVS1cL0pvUU7WsPSQlw&s" },
-            { name: "Footwear", img: "https://th.bing.com/th/id/OIP.LarzleVeOtK9bPg21xTIRgHaE7?rs=1&pid=ImgDetMain" }
-          ]; %>
-  
-          <% categories.forEach(category => { %>
-            <a href="/categories?name=<%= category.name %>" class="text-center category-item text-decoration-none text-dark">
-              <img src="<%= category.img %>" alt="<%= category.name %>">
-              <h3><%= category.name %></h3>
-            </a>
-          <% }); %>
-        </div>
-  
-        <button id="scrollRight" class="scroll-btn">
-          <i class="ri-arrow-right-wide-fill fs-4"></i>
-        </button>
-      </div>
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-        <% if(products.length>0){ %> 
-            <% for (product of products){ %>
-                <a href="/product/<%= product.id %>" class="link">
-            <div class="card listing-card">
-                <img src="<%=product.image.url%>" class="card-img-top" alt="image" style="height: 20rem;">
-                <div class="card-img-overlay"></div>
-                <div class="card-body">
-                  <b><%=product.title%></b> <br>
-                  &#8377; <%= product.price.toLocaleString("en-IN")%>
-                </div>
-              </div>
-            </a>
-              <% } %>
-        <% } else{ %> 
-            <div class="d-flex justify-content-center align-items-center" style="height: 70vh; width: 100%;">
-                <div class="text-center">
-                  <img src="/images/empty-box.png" alt="No products" class="mx-auto w-32 mb-4">
-                  <h2 class="text-xl font-semibold text-gray-700">No products found in this category.</h2>
-                  <p class="text-gray-500">Please check back later or browse other categories.</p>
-                </div>
-              </div>
-        <% } %> 
-    
+
+<!-- 🔥 CATEGORY BAR -->
+<section class="category-section">
+
+  <div class="category-wrapper">
+
+    <button id="scrollLeft" class="scroll-btn">←</button>
+
+    <div class="category-bar" id="categoryScroll">
+
+      <% const categories = [
+        { name: "Grocery", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxsMhoicy2PEk_G0BFAEQFFyqqf8qgh-hy1w&s" },
+        { name: "Mobile", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" },
+        { name: "Fashion", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxIl45bxA93y_qY44T27vlMqAqAtr-eB3iVw&s" },
+        { name: "Electronics", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_SrXfWV7FUYaZ04WNO07dCRLdYQNII9g16w&s" },
+        { name: "Kitchen", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQopz4Td6D059R0J14Jgi4TpeOMs7hdAiLSTQ&s" },
+        { name: "Beauty", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-dd18WuuJYE-sJhWJVS1cL0pvUU7WsPSQlw&s" },
+        { name: "Footwear", img: "https://th.bing.com/th/id/OIP.LarzleVeOtK9bPg21xTIRgHaE7?rs=1&pid=ImgDetMain" }
+      ]; %>
+
+      <% categories.forEach(category => { %>
+        <a href="/categories?name=<%= category.name %>" class="category-card">
+
+          <div class="category-img">
+            <img src="<%= category.img %>" alt="<%= category.name %>">
+          </div>
+
+          <p><%= category.name %></p>
+
+        </a>
+      <% }); %>
+
     </div>
-</div>
-</body>
+
+    <button id="scrollRight" class="scroll-btn">→</button>
+
+  </div>
+
+</section>
+
+
+<!-- 🔥 PRODUCT SECTION -->
+<section class="product-section">
+
+  <% if(products.length > 0){ %>
+
+    <div class="grid grid-3">
+
+      <% for (product of products){ %>
+        <a href="/product/<%= product.id %>">
+
+          <div class="card-modern">
+            <img src="<%= product.image.url %>" alt="product">
+
+            <div class="card-content">
+              <h3><%= product.title %></h3>
+              <p>₹ <%= product.price.toLocaleString("en-IN") %></p>
+            </div>
+          </div>
+
+        </a>
+      <% } %>
+
+    </div>
+
+  <% } else { %>
+
+    <div class="empty-state">
+      <img src="/images/empty-box.png" alt="No products">
+      <h2>No products found</h2>
+      <p>Try another category</p>
+    </div>
+
+  <% } %>
+
+</section>

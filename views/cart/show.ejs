@@ -1,25 +1,71 @@
 <% layout('/layouts/boilerplate') -%>
-<div class="container mt-5">
+
+<section class="cart-page">
+
   <h1>Your Cart</h1>
+
   <% if (!cart || cart.items.length === 0) { %>
-    <p>Your cart is empty!</p>
+    <p class="empty-cart">Your cart is empty 🛒</p>
   <% } else { %>
-    <div class="list-group mb-4">
-      <% for (let item of cart.items) { %>
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <h5><%= item.product.title %></h5>
-            <p>₹<%= item.product.price %> x <%= item.quantity %></p>
+
+    <div class="cart-layout">
+
+      <!-- 🔥 LEFT: ITEMS -->
+      <div class="cart-items">
+
+        <% let total = 0; %>
+
+        <% for (let item of cart.items) { %>
+          <% total += item.product.price * item.quantity; %>
+
+          <div class="cart-card">
+
+            <img src="<%= item.product.image %>" alt="product">
+
+            <div class="cart-info">
+              <h3><%= item.product.title %></h3>
+              <p>₹ <%= item.product.price %> × <%= item.quantity %></p>
+              <p class="item-total">
+                ₹ <%= item.product.price * item.quantity %>
+              </p>
+
+              <form action="/cart/remove/<%= item.product._id %>" method="POST">
+                <button class="btn">Remove</button>
+              </form>
+            </div>
+
           </div>
-          <img src="<%= item.product.image %>" width="100" class="rounded">
-          <form action="/cart/remove/<%= item.product._id %>" method="POST" class="ms-3">
-            <button class="btn btn-sm btn-danger">Remove</button>
-          </form>
+        <% } %>
+
+      </div>
+
+      <!-- 🔥 RIGHT: SUMMARY -->
+      <div class="cart-summary">
+
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Total Items</span>
+          <span><%= cart.items.length %></span>
         </div>
-      <% } %>
+
+        <div class="summary-row">
+          <span>Total Price</span>
+          <span>₹ <%= total.toLocaleString("en-IN") %></span>
+        </div>
+
+        <hr>
+
+        <form action="/cart/checkout" method="post">
+          <button class="btn btn-primary checkout-btn">
+            Proceed to Checkout
+          </button>
+        </form>
+
+      </div>
+
     </div>
-    <form action="/cart/checkout" method="post">
-      <button class="btn btn-success">Proceed to Checkout</button>
-    </form>
+
   <% } %>
-</div>
+
+</section>

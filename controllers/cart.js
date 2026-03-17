@@ -37,6 +37,7 @@ module.exports.checkout=async (req, res) => {
     items: cart.items.map(i => ({ product: i.product._id, quantity: i.quantity })),
     total
   });
+  
   await order.save();
 await order.populate('items.product');
   await Cart.findOneAndDelete({ user: req.user._id });
@@ -53,6 +54,7 @@ module.exports.removeProduct=async (req, res) => {
     items: cart.items.map(i => ({ product: i.product._id, quantity: i.quantity })),
     total
   });
+
   await order.save();
 await order.populate('items.product');
   await Cart.findOneAndDelete({ user: req.user._id });

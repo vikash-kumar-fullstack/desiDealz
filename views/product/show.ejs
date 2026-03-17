@@ -1,131 +1,144 @@
 <% layout("/layouts/boilerplate") -%>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<body>
-        <div class="row">
-            <div class="col-6 offset-3">
-        <h1 class="card-title mt-3 mb-3"><%= data.title %></h1>
-        <div class="card listing-card">
-            <img src="<%= data.image.url %>" class="card-img-top size" alt="image">
-            <div class="card-body">
-                <div class="detail">
-                  <div class="mt-2"><h5>Owned By: <%= data.owner.username %></h5></div>
-                    <div><%= data.description %></div>
-                    <div> &#8377; <%= data.price.toLocaleString("en-IN") %></div>
-                    <div><%= data.location %></div>
-                </div>
-                <% if(curUser && curUser._id.equals(data.owner._id)){ %>
-                  <div class="d-flex gap-5">
-                    <a href="/product/<%= data.id %>/edit" class="btn btn-outline-warning mt-3">Edit</a>
-                    <form action="/product/<%= data.id %>/delete?_method=DELETE" method="post"><button class="btn btn-outline-danger mt-3">Delete</button></form>
-                  </div>
-                <% }else{ %>
-                  <div class="d-flex gap-5">
-                    <a href="/product/<%= data.id %>/buy" class="btn btn-outline-success mt-3">BUY</a>
-                    <form action="/product/<%= data.id %>/cart" method="post">
-                      <button class="btn btn-outline-danger mt-3">Add to Cart</button>
-                    </form>
-                    
-                    </div>
-                <% } %>
-            </div>
-          </div>
-        </div>
+
+<section class="product-detail">
+
+  <!-- 🔥 TOP SECTION -->
+  <div class="product-layout">
+
+    <!-- IMAGE -->
+    <div class="product-image">
+      <img src="<%= data.image.url %>" alt="product">
     </div>
-    <% if(curUser){ %>
-      <hr>
-      <div class="col-6 offset-3">
-          <h1>Leave a review</h1>
-          <form action="/product/<%=data.id%>/review" class="needs-validation" novalidate method="post">
-            <div class="mb-3">
-              <label class="form-label">Rating</label>
-              <fieldset class="starability-heart fs-6">
-                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                <label for="first-rate1" title="Terrible">1 star</label>
-                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                <label for="first-rate2" title="Not good">2 stars</label>
-                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                <label for="first-rate3" title="Average">3 stars</label>
-                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                <label for="first-rate4" title="Very good">4 stars</label>
-                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                <label for="first-rate5" title="Amazing">5 stars</label>
-              </fieldset>
-          </div> 
-              <div>
-                  <label class="form-label" for="comment">Comments</label>
-                  <textarea class="form-control" rows="3" name="review[comment]" id="comment" placeholder="Comment here!" required></textarea>
-              </div>
-              <div>
-                  <button class="btn btn-outline-dark mt-3">Submit</button>
-              </div>
+
+    <!-- DETAILS -->
+    <div class="product-info">
+
+      <h1><%= data.title %></h1>
+
+      <p class="price">₹ <%= data.price.toLocaleString("en-IN") %></p>
+
+      <p class="desc"><%= data.description %></p>
+
+      <p class="meta">Owner: <%= data.owner.username %></p>
+      <p class="meta">Location: <%= data.location %></p>
+
+      <!-- ACTIONS -->
+      <% if(curUser && curUser._id.equals(data.owner._id)){ %>
+        <div class="actions">
+          <a href="/product/<%= data.id %>/edit" class="btn">Edit</a>
+          <form action="/product/<%= data.id %>/delete?_method=DELETE" method="post">
+            <button class="btn">Delete</button>
           </form>
-      </div>
-    <% } %>
-    <%if(data.review.length>0){%>
-      <hr>
-      <h1>All Reviews</h1>
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        </div>
+      <% } else { %>
+        <div class="actions">
+          <a href="/product/<%= data.id %>/buy" class="btn btn-primary">Buy Now</a>
+          <form action="/product/<%= data.id %>/cart" method="post">
+            <button class="btn">Add to Cart</button>
+          </form>
+        </div>
+      <% } %>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- 🔥 REVIEW SECTION -->
+<section class="review-section">
+
+  <% if(curUser){ %>
+    <div class="review-form">
+      <h2>Leave a Review</h2>
+
+      <form action="/product/<%=data.id%>/review" method="post">
+
+        <fieldset class="starability-heart">
+          <input type="radio" name="review[rating]" value="1" checked />
+          <input type="radio" name="review[rating]" value="2" />
+          <input type="radio" name="review[rating]" value="3" />
+          <input type="radio" name="review[rating]" value="4" />
+          <input type="radio" name="review[rating]" value="5" />
+        </fieldset>
+
+        <textarea name="review[comment]" placeholder="Write your review..." required></textarea>
+
+        <button class="btn btn-primary">Submit</button>
+
+      </form>
+    </div>
+  <% } %>
+
+
+  <% if(data.review.length > 0){ %>
+    <div class="reviews">
+      <h2>Reviews</h2>
+
+      <div class="grid grid-3">
         <% for (let review of data.review) { %>
-          <div class="col">
-            <div class="card h-100">
-              <div class="card-body m-2 p-2">
-                <h5 class="card-title">@<%=review.author.username%></h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary"><p class="starability-result" data-rating="<%= review.rating %>">
-                </p></h6>
-                <p class="card-text"><%= review.comment %></p>
-                <form action="/product/<%=data.id%>/review/<%=review.id%>?_method=DELETE" method="post">
-                <button class="btn btn-outline-dark">Delete</button></form>
-              </div>
+          <div class="card-modern">
+
+            <div class="card-content">
+              <h4>@<%=review.author.username%></h4>
+              <p>⭐ <%= review.rating %>/5</p>
+              <p><%= review.comment %></p>
+
+              <form action="/product/<%=data.id%>/review/<%=review.id%>?_method=DELETE" method="post">
+                <button class="btn">Delete</button>
+              </form>
             </div>
+
           </div>
         <% } %>
       </div>
-    <%}%>
-    <hr>
-    <div class="row">
-      <div class="col-8 offset-2 mb-3">
-        <h1>Location</h1>
-        <div id="map"></div>
-        <script>
-          const locationName = "<%= data.location %>";
-          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${locationName}`)
-            .then(response => response.json())
-            .then(data => {
-          if (data.length > 0) {
-          const lat = parseFloat(data[0].lat);
-          const lon = parseFloat(data[0].lon);
-
-          const map = L.map('map').setView([lat, lon], 13);
-
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          attribution: '© OpenStreetMap contributors'
-          }).addTo(map);
-
-          L.marker([lat, lon]).addTo(map)
-          .bindPopup(locationName)
-          .openPopup();
-
-          var popup = L.popup();
-
-        function onMapClick(e) {
-        popup
-        .setLatLng(e.latlng)
-        .setContent(`<h3>Hello</h3> You are at ` + e.latlng.toString())
-        .openOn(map);
-        }
-
-        map.on('click', onMapClick);
-      } else {
-        alert('Location not found!');
-      }
-    })
-    .catch(error => {
-      console.error('Geocoding error:', error);
-    });
-        </script>
-      </div>
     </div>
-</body>
+  <% } %>
+
+</section>
+
+
+<!-- 🔥 MAP SECTION -->
+<section class="map-section">
+  <h2>Location</h2>
+
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="map-loading">Loading map...</div>
+  </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const locationName = "<%= data.location %>";
+
+  const map = L.map("map").setView([20.5937, 78.9629], 5);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+  }).addTo(map);
+
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${locationName}`
+    );
+    const data = await res.json();
+
+    if (data.length > 0) {
+      const lat = data[0].lat;
+      const lon = data[0].lon;
+
+      map.setView([lat, lon], 13);
+
+      L.marker([lat, lon])
+        .addTo(map)
+        .bindPopup(locationName)
+        .openPopup();
+    }
+  } catch (err) {
+    console.log("Map error:", err);
+  }
+});
+</script>
